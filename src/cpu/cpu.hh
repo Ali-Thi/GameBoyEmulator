@@ -74,8 +74,13 @@ namespace CPU
          */
         void inc(ArithmeticR8 reg);
 
+        /**
+         * decrement the value in a specific register by 1
+         * @param reg the register
+         */
+        void dec(ArithmeticR8 reg);
+
         /*
-        DEC (decrement) - decrement the value in a specific register by 1
         CCF (complement carry flag) - toggle the value of the carry flag
         SCF (set carry flag) - set the carry flag to true
         RRA (rotate right A register) - bit rotate A register right through the carry flag

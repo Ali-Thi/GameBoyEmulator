@@ -19,6 +19,16 @@ namespace CPU
         set8byteRegister(arithmeticR8ToR8(reg), result);
     }
 
+    void CPU::dec(ArithmeticR8 reg)
+    {
+        auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
+        uint8_t result;
+
+        setFRegister(__builtin_sub_overflow(1, valueReg, &result), 1, valueReg, result, true);
+
+        set8byteRegister(arithmeticR8ToR8(reg), result);
+    }
+
     void CPU::cp(ArithmeticR8 reg)
     {
         auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
