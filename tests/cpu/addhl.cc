@@ -8,7 +8,7 @@ TEST_F(CPUTest, ADDHL_0)
 {
     cpu.addhl(CPU::ArithmeticR16::BC);
     EXPECT_EQ(cpu.get16byteRegister(CPU::R16::HL), 0);
-    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 128);
+    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), ZERO_FLAG_BYTE_MASK);
 }
 
 TEST_F(CPUTest, ADDHL_INTEGER)
@@ -34,5 +34,5 @@ TEST_F(CPUTest, ADDHL_OVERFLOW)
     cpu.set16byteRegister(CPU::R16::HL, 65535);
     cpu.addhl(CPU::ArithmeticR16::BC);
     EXPECT_EQ(cpu.get16byteRegister(CPU::R16::HL), 0);
-    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 176);
+    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), ZERO_FLAG_BYTE_MASK | HALF_CARRY_FLAG_BYTE_MASK | CARRY_FLAG_BYTE_MASK);
 }

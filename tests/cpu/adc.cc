@@ -8,7 +8,7 @@ TEST_F(CPUTest, ADC_0)
 {
     cpu.adc(CPU::ArithmeticR8::B);
     EXPECT_EQ(cpu.get8byteRegister(CPU::R8::A), 128);
-    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 128);
+    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), ZERO_FLAG_BYTE_MASK);
 }
 
 TEST_F(CPUTest, ADC_INTEGER)
@@ -34,5 +34,5 @@ TEST_F(CPUTest, ADC_OVERFLOW)
     cpu.set8byteRegister(CPU::R8::A, 255);
     cpu.adc(CPU::ArithmeticR8::B);
     EXPECT_EQ(cpu.get8byteRegister(CPU::R8::A), 176);
-    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 176);
+    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), ZERO_FLAG_BYTE_MASK | HALF_CARRY_FLAG_BYTE_MASK | CARRY_FLAG_BYTE_MASK);
 }

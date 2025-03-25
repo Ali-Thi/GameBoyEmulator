@@ -9,12 +9,17 @@ namespace CPU
     static R8 arithmeticR8ToR8(ArithmeticR8 reg);
     static R16 arithmeticR16ToR16(ArithmeticR16 reg);
 
+    void CPU::ccf()
+    {
+        set8byteRegister(R8::F, get8byteRegister(R8::F) ^ CARRY_FLAG_BYTE_MASK);
+    }
+
     void CPU::inc(ArithmeticR8 reg)
     {
         auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
         uint8_t result;
 
-        setFRegister(__builtin_add_overflow(1, valueReg, &result), 1, valueReg, result);
+        setFRegister(__builtin_add_overflow(valueReg, 1, &result), 1, valueReg, result);
 
         set8byteRegister(arithmeticR8ToR8(reg), result);
     }
@@ -24,7 +29,7 @@ namespace CPU
         auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
         uint8_t result;
 
-        setFRegister(__builtin_sub_overflow(1, valueReg, &result), 1, valueReg, result, true);
+        setFRegister(__builtin_sub_overflow(valueReg, 1, &result), 1, valueReg, result, true);
 
         set8byteRegister(arithmeticR8ToR8(reg), result);
     }

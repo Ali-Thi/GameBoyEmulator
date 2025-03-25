@@ -80,8 +80,12 @@ namespace CPU
          */
         void dec(ArithmeticR8 reg);
 
+        /**
+         * toggle the value of the carry flag
+         */
+        void ccf();
+
         /*
-        CCF (complement carry flag) - toggle the value of the carry flag
         SCF (set carry flag) - set the carry flag to true
         RRA (rotate right A register) - bit rotate A register right through the carry flag
         RLA (rotate left A register) - bit rotate A register left through the carry flag

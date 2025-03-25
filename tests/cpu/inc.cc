@@ -32,5 +32,5 @@ TEST_F(CPUTest, INC_OVERFLOW)
     cpu.set8byteRegister(CPU::R8::A, 255);
     cpu.inc(CPU::ArithmeticR8::A);
     EXPECT_EQ(cpu.get8byteRegister(CPU::R8::A), 0);
-    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 176);
+    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), ZERO_FLAG_BYTE_MASK | HALF_CARRY_FLAG_BYTE_MASK | CARRY_FLAG_BYTE_MASK);
 }

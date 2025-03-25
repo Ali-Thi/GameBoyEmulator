@@ -8,7 +8,7 @@ TEST_F(CPUTest, SBC_0)
 {
     cpu.sbc(CPU::ArithmeticR8::B);
     EXPECT_EQ(cpu.get8byteRegister(CPU::R8::A), 64);
-    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 192);
+    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), ZERO_FLAG_BYTE_MASK | SUBTRACT_FLAG_BYTE_MASK);
 }
 
 TEST_F(CPUTest, SBC_INTEGER)
@@ -17,7 +17,7 @@ TEST_F(CPUTest, SBC_INTEGER)
     cpu.set8byteRegister(CPU::R8::A, 255);
     cpu.sbc(CPU::ArithmeticR8::B);
     EXPECT_EQ(cpu.get8byteRegister(CPU::R8::A), 190);
-    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 64);
+    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), SUBTRACT_FLAG_BYTE_MASK);
 }
 
 TEST_F(CPUTest, SBC_INTEGER_TO_INTEGER)
@@ -26,7 +26,7 @@ TEST_F(CPUTest, SBC_INTEGER_TO_INTEGER)
     cpu.set8byteRegister(CPU::R8::A, 4);
     cpu.sbc(CPU::ArithmeticR8::B);
     EXPECT_EQ(cpu.get8byteRegister(CPU::R8::A), 64);
-    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 192);
+    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), ZERO_FLAG_BYTE_MASK | SUBTRACT_FLAG_BYTE_MASK);
 }
 
 TEST_F(CPUTest, SBC_OVERFLOW)
@@ -34,5 +34,5 @@ TEST_F(CPUTest, SBC_OVERFLOW)
     cpu.set8byteRegister(CPU::R8::B, 4);
     cpu.sbc(CPU::ArithmeticR8::B);
     EXPECT_EQ(cpu.get8byteRegister(CPU::R8::A), 172);
-    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 80);
+    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), SUBTRACT_FLAG_BYTE_MASK | CARRY_FLAG_BYTE_MASK);
 }

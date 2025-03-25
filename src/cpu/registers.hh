@@ -7,10 +7,10 @@
 #define UPPER_NIBBLE 0b11110000
 #define LOWER_NIBBLE 0b00001111
 
-#define ZERO_FLAG_BYTE_MASK 128; // Z flag
-#define SUBTRACT_FLAG_BYTE_MASK 64; // N flag
-#define HALF_CARRY_FLAG_BYTE_MASK 32; // H flag
-#define CARRY_FLAG_BYTE_MASK 16; // C flag
+#define ZERO_FLAG_BYTE_MASK 128 // Z flag
+#define SUBTRACT_FLAG_BYTE_MASK 64 // N flag
+#define HALF_CARRY_FLAG_BYTE_MASK 32 // H flag
+#define CARRY_FLAG_BYTE_MASK 16 // C flag
 
 namespace CPU
 {

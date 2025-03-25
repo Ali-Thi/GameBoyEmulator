@@ -9,7 +9,7 @@ TEST_F(CPUTest, DEC_B_FROM_1_TO_0)
     cpu.set8byteRegister(CPU::R8::B, 1);
     cpu.dec(CPU::ArithmeticR8::B);
     EXPECT_EQ(cpu.get8byteRegister(CPU::R8::B), 0);
-    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 128);
+    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), ZERO_FLAG_BYTE_MASK | SUBTRACT_FLAG_BYTE_MASK);
 }
 
 TEST_F(CPUTest, DEC_B_FROM_4_TO_3)
@@ -17,7 +17,7 @@ TEST_F(CPUTest, DEC_B_FROM_4_TO_3)
     cpu.set8byteRegister(CPU::R8::B, 4);
     cpu.dec(CPU::ArithmeticR8::B);
     EXPECT_EQ(cpu.get8byteRegister(CPU::R8::B), 3);
-    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 0);
+    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), SUBTRACT_FLAG_BYTE_MASK);
 }
 
 TEST_F(CPUTest, DEC_A_FROM_4_TO_3)
@@ -25,7 +25,7 @@ TEST_F(CPUTest, DEC_A_FROM_4_TO_3)
     cpu.set8byteRegister(CPU::R8::A, 4);
     cpu.dec(CPU::ArithmeticR8::A);
     EXPECT_EQ(cpu.get8byteRegister(CPU::R8::A), 3);
-    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 0);
+    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), SUBTRACT_FLAG_BYTE_MASK);
 }
 
 TEST_F(CPUTest, DEC_OVERFLOW)
@@ -33,5 +33,5 @@ TEST_F(CPUTest, DEC_OVERFLOW)
     cpu.set8byteRegister(CPU::R8::A, 0);
     cpu.dec(CPU::ArithmeticR8::A);
     EXPECT_EQ(cpu.get8byteRegister(CPU::R8::A), 255);
-    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 176);
+    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), SUBTRACT_FLAG_BYTE_MASK | CARRY_FLAG_BYTE_MASK);
 }
