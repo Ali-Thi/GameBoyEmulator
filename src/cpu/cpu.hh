@@ -56,6 +56,12 @@ namespace CPU
          */
         void orOperator(ArithmeticR8 reg);
 
+        /**
+         * do a bitwise xor on the value in a specific register and the value in the A register
+         * @param reg the register
+         */
+        void xorOperator(ArithmeticR8 reg);
+
         /*
         XOR (logical xor) - do a bitwise xor on the value in a specific register and the value in the A register
         CP (compare) - just like SUB except the result of the subtraction is not stored back into A

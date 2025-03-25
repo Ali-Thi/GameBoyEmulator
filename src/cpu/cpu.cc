@@ -25,6 +25,13 @@ namespace CPU
         set8byteRegister(R8::A, valueReg | valueAReg);
     }
 
+    void CPU::xorOperator(ArithmeticR8 reg)
+    {
+        auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
+        auto valueAReg = get8byteRegister(R8::A);
+
+        set8byteRegister(R8::A, valueReg ^ valueAReg);
+    }
 
     void CPU::sub(ArithmeticR8 reg)
     {
