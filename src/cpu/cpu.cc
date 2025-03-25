@@ -9,70 +9,67 @@ namespace CPU
     static R8 arithmeticR8ToR8(ArithmeticR8 reg);
     static R16 arithmeticR16ToR16(ArithmeticR16 reg);
 
+    void CPU::inc(ArithmeticR8 reg)
+    {
+        auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
+        uint8_t result;
+
+        setFRegister(__builtin_add_overflow(1, valueReg, &result), 1, valueReg, result);
+
+        set8byteRegister(arithmeticR8ToR8(reg), result);
+    }
+
     void CPU::cp(ArithmeticR8 reg)
     {
         auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
         auto valueAReg = get8byteRegister(R8::A);
-        uint8_t valueFReg = 0;
         uint8_t result;
-        if (__builtin_sub_overflow(valueAReg, valueReg, &result))
-            valueFReg |= CARRY_FLAG_BYTE_MASK;
 
-        if (result == 0)
-            valueFReg |= ZERO_FLAG_BYTE_MASK;
-
-        if ((valueAReg & LOWER_NIBBLE) - (valueReg & LOWER_NIBBLE) > LOWER_NIBBLE)
-            valueFReg |= HALF_CARRY_FLAG_BYTE_MASK;
-
-        valueFReg |= SUBTRACT_FLAG_BYTE_MASK;
-
-        set8byteRegister(R8::F, valueFReg);
+        setFRegister(__builtin_sub_overflow(valueAReg, valueReg, &result), valueAReg, valueReg, result, true);
     }
-
 
     void CPU::andOperator(ArithmeticR8 reg)
     {
         auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
         auto valueAReg = get8byteRegister(R8::A);
+        uint8_t result = valueReg & valueAReg;
 
-        set8byteRegister(R8::A, valueReg & valueAReg);
+        setFRegister(false, valueAReg, valueReg, result);
+
+        set8byteRegister(R8::A, result);
     }
 
     void CPU::orOperator(ArithmeticR8 reg)
     {
         auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
         auto valueAReg = get8byteRegister(R8::A);
+        uint8_t result = valueReg | valueAReg;
 
-        set8byteRegister(R8::A, valueReg | valueAReg);
+        setFRegister(false, valueAReg, valueReg, result);
+
+        set8byteRegister(R8::A, result);
     }
 
     void CPU::xorOperator(ArithmeticR8 reg)
     {
         auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
         auto valueAReg = get8byteRegister(R8::A);
+        uint8_t result = valueReg ^ valueAReg;
 
-        set8byteRegister(R8::A, valueReg ^ valueAReg);
+        setFRegister(false, valueAReg, valueReg, result);
+
+        set8byteRegister(R8::A, result);
     }
 
     void CPU::sub(ArithmeticR8 reg)
     {
         auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
         auto valueAReg = get8byteRegister(R8::A);
-        uint8_t valueFReg = 0;
         uint8_t result;
-        if (__builtin_sub_overflow(valueAReg, valueReg, &result))
-            valueFReg |= CARRY_FLAG_BYTE_MASK;
 
-        if (result == 0)
-            valueFReg |= ZERO_FLAG_BYTE_MASK;
-
-        if ((valueAReg & LOWER_NIBBLE) - (valueReg & LOWER_NIBBLE) > LOWER_NIBBLE)
-            valueFReg |= HALF_CARRY_FLAG_BYTE_MASK;
-
-        valueFReg |= SUBTRACT_FLAG_BYTE_MASK;
+        setFRegister(__builtin_sub_overflow(valueAReg, valueReg, &result), valueAReg, valueReg, result, true);
 
         set8byteRegister(R8::A, result);
-        set8byteRegister(R8::F, valueFReg);
     }
 
     void CPU::sbc(ArithmeticR8 reg)
@@ -89,38 +86,22 @@ namespace CPU
     {
         auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
         auto valueAReg = get8byteRegister(R8::A);
-        uint8_t valueFReg = 0;
         uint8_t result;
-        if (__builtin_add_overflow(valueAReg, valueReg, &result))
-            valueFReg |= CARRY_FLAG_BYTE_MASK;
 
-        if (result == 0)
-            valueFReg |= ZERO_FLAG_BYTE_MASK;
-
-        if ((valueAReg & LOWER_NIBBLE) + (valueReg & LOWER_NIBBLE) > LOWER_NIBBLE)
-            valueFReg |= HALF_CARRY_FLAG_BYTE_MASK;
+        setFRegister(__builtin_add_overflow(valueAReg, valueReg, &result), valueAReg, valueReg, result);
 
         set8byteRegister(R8::A, result);
-        set8byteRegister(R8::F, valueFReg);
     }
 
     void CPU::addhl(ArithmeticR16 reg)
     {
         auto valueReg = get16byteRegister(arithmeticR16ToR16(reg));
         auto valueHLReg = get16byteRegister(R16::HL);
-        uint8_t valueFReg = 0;
         uint16_t result;
-        if (__builtin_add_overflow(valueHLReg, valueReg, &result))
-            valueFReg |= CARRY_FLAG_BYTE_MASK;
 
-        if (result == 0)
-            valueFReg |= ZERO_FLAG_BYTE_MASK;
-
-        if ((valueHLReg & LOWER_NIBBLE) + (valueReg & LOWER_NIBBLE) > LOWER_NIBBLE)
-            valueFReg |= HALF_CARRY_FLAG_BYTE_MASK;
+        setFRegister(__builtin_add_overflow(valueHLReg, valueReg, &result), valueHLReg, valueReg, result);
 
         set16byteRegister(R16::HL, result);
-        set8byteRegister(R8::F, valueFReg);
     }
 
     void CPU::adc(ArithmeticR8 reg)
@@ -241,5 +222,35 @@ namespace CPU
         }
 
         throw std::invalid_argument("Arithmetic 16 bit register not recognised");
+    }
+
+    void CPU::setFRegister(bool overflow, uint8_t valueFirstRegister, uint8_t valueLastRegister, const uint8_t &result, bool isSubstraction)
+    {
+        setFRegister(overflow, static_cast<uint16_t>(valueFirstRegister), static_cast<uint16_t>(valueLastRegister), static_cast<uint16_t>(result), isSubstraction);
+    }
+
+    void CPU::setFRegister(bool overflow, uint16_t valueFirstRegister, uint16_t valueLastRegister, const uint16_t &result, bool isSubstraction)
+    {
+        uint8_t valueFReg = 0;
+        if (overflow)
+            valueFReg |= CARRY_FLAG_BYTE_MASK;
+
+        if (result == 0)
+            valueFReg |= ZERO_FLAG_BYTE_MASK;
+
+        if (!isSubstraction)
+        {
+            if ((valueFirstRegister & LOWER_NIBBLE) + (valueLastRegister & LOWER_NIBBLE) > LOWER_NIBBLE)
+                valueFReg |= HALF_CARRY_FLAG_BYTE_MASK;
+        }
+        else
+        {
+            valueFReg |= SUBTRACT_FLAG_BYTE_MASK;
+
+            if ((valueFirstRegister & LOWER_NIBBLE) - (valueLastRegister & LOWER_NIBBLE) > LOWER_NIBBLE)
+                valueFReg |= HALF_CARRY_FLAG_BYTE_MASK;
+        }
+
+        set8byteRegister(R8::F, valueFReg);
     }
 }
