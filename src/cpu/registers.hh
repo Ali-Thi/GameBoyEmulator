@@ -33,4 +33,22 @@ namespace CPU
         DE,
         HL,
     };
+
+    enum class ArithmeticR8
+    {
+        A,
+        B,
+        C,
+        D,
+        E,
+        H,
+        L,
+    };
+
+    enum class ArithmeticR16
+    {
+        BC,
+        DE,
+        HL,
+    };
 }

@@ -4,12 +4,14 @@
 
 namespace CPU
 {
-    void CPU::add(R8 reg)
-    {
-        if (reg == R8::F)
-            return;
+    static std::size_t findRegisterIndex(R8 reg);
+    static std::size_t findRegisterIndex(R16 reg);
+    static R8 arithmeticR8ToR8(ArithmeticR8 reg);
+    static R16 arithmeticR16ToR16(ArithmeticR16 reg);
 
-        auto valueReg = get8byteRegister(reg);
+    void CPU::add(ArithmeticR8 reg)
+    {
+        auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
         auto valueAReg = get8byteRegister(R8::A);
         uint8_t valueFReg = 0;
         uint8_t result;
@@ -26,12 +28,9 @@ namespace CPU
         set8byteRegister(R8::F, valueFReg);
     }
 
-    void CPU::addhl(R16 reg)
+    void CPU::addhl(ArithmeticR16 reg)
     {
-        if (reg == R16::AF)
-            return;
-
-        auto valueReg = get16byteRegister(reg);
+        auto valueReg = get16byteRegister(arithmeticR16ToR16(reg));
         auto valueHLReg = get16byteRegister(R16::HL);
         uint8_t valueFReg = 0;
         uint16_t result;
@@ -48,12 +47,9 @@ namespace CPU
         set8byteRegister(R8::F, valueFReg);
     }
 
-    void CPU::addc(R8 reg)
+    void CPU::adc(ArithmeticR8 reg)
     {
-        if (reg == R8::F)
-            return;
-
-        auto valueReg = get8byteRegister(reg);
+        auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
         auto valueAReg = get8byteRegister(R8::A);
         uint8_t valueFReg = 0;
         uint8_t result;
@@ -103,7 +99,7 @@ namespace CPU
             registers[index + 1] = (value & BYTE_MASK);
     }
 
-    std::size_t CPU::findRegisterIndex(R8 reg)
+    static std::size_t findRegisterIndex(R8 reg)
     {
         switch (reg)
         {
@@ -128,7 +124,7 @@ namespace CPU
         throw std::invalid_argument("8 bit register not recognised");
     }
 
-    std::size_t CPU::findRegisterIndex(R16 reg)
+    static std::size_t findRegisterIndex(R16 reg)
     {
         switch (reg)
         {
@@ -145,4 +141,41 @@ namespace CPU
         throw std::invalid_argument("16 bit register not recognised");
     }
 
+    static R8 arithmeticR8ToR8(ArithmeticR8 reg)
+    {
+        switch (reg)
+        {
+        case ArithmeticR8::A:
+            return R8::A;
+        case ArithmeticR8::B:
+            return R8::B;
+        case ArithmeticR8::C:
+            return R8::C;
+        case ArithmeticR8::D:
+            return R8::D;
+        case ArithmeticR8::E:
+            return R8::E;
+        case ArithmeticR8::H:
+            return R8::H;
+        case ArithmeticR8::L:
+            return R8::L;
+        }
+
+        throw std::invalid_argument("Arithmetic 8 bit register not recognised");
+    }
+
+    static R16 arithmeticR16ToR16(ArithmeticR16 reg)
+    {
+        switch (reg)
+        {
+        case ArithmeticR16::BC:
+            return R16::BC;
+        case ArithmeticR16::DE:
+            return R16::DE;
+        case ArithmeticR16::HL:
+            return R16::HL;
+        }
+
+        throw std::invalid_argument("Arithmetic 16 bit register not recognised");
+    }
 }
