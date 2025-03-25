@@ -16,21 +16,27 @@ namespace CPU
 
         /**
          * add a register to the A register
-         * @param reg the register to add
+         * @param reg the register
          */
         void add(ArithmeticR8 reg);
 
         /**
          * add a register to the HL register
-         * @param reg the register to add
+         * @param reg the register
          */
         void addhl(ArithmeticR16 reg);
 
         /**
          * add a register to the A register and also add the carry flag to the result
-         * @param reg the register to add
+         * @param reg the register
          */
         void adc(ArithmeticR8 reg);
+
+        /**
+         * subtract a register to the A register
+         * @param reg the register
+         */
+        void sub(ArithmeticR8 reg);
 
     private:
         /* REPRESENTATION ORDER IN MEMORY : [ A | F | B | C | D | E | H | L ] */

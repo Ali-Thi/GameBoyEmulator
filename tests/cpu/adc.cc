@@ -7,7 +7,7 @@
 TEST_F(CPUTest, ADC_0)
 {
     cpu.adc(CPU::ArithmeticR8::B);
-    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::A), 0);
+    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::A), 128);
     EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 128);
 }
 
@@ -28,11 +28,11 @@ TEST_F(CPUTest, ADC_INTEGER_TO_INTEGER)
     EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 0);
 }
 
-TEST_F(CPUTest, ADD_OVERFLOW)
+TEST_F(CPUTest, ADC_OVERFLOW)
  {
     cpu.set8byteRegister(CPU::R8::B, 1);
     cpu.set8byteRegister(CPU::R8::A, 255);
-    cpu.add(CPU::ArithmeticR8::B);
+    cpu.adc(CPU::ArithmeticR8::B);
     EXPECT_EQ(cpu.get8byteRegister(CPU::R8::A), 176);
     EXPECT_EQ(cpu.get8byteRegister(CPU::R8::F), 176);
 }
