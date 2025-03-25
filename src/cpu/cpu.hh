@@ -85,8 +85,12 @@ namespace CPU
          */
         void ccf();
 
+        /**
+         * set the carry flag to true
+         */
+        void scf();
+
         /*
-        SCF (set carry flag) - set the carry flag to true
         RRA (rotate right A register) - bit rotate A register right through the carry flag
         RLA (rotate left A register) - bit rotate A register left through the carry flag
         RRCA (rotate right A register) - bit rotate A register right (not through the carry flag)

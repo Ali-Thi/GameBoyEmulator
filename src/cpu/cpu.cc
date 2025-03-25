@@ -9,6 +9,11 @@ namespace CPU
     static R8 arithmeticR8ToR8(ArithmeticR8 reg);
     static R16 arithmeticR16ToR16(ArithmeticR16 reg);
 
+    void CPU::scf()
+    {
+        set8byteRegister(R8::F, CARRY_FLAG_BYTE_MASK);
+    }
+
     void CPU::ccf()
     {
         set8byteRegister(R8::F, get8byteRegister(R8::F) ^ CARRY_FLAG_BYTE_MASK);
