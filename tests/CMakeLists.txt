@@ -24,6 +24,7 @@ add_executable(test cpu/registers/registerA.cc
         cpu/sub.cc
         cpu/subc.cc
         cpu/and.cc
+        cpu/or.cc
 )
 target_compile_options(test PRIVATE -Wall -Wextra -Werror -pedantic -Wold-style-cast)
 target_link_libraries(test gtest gtest_main cpu)

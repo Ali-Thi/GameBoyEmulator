@@ -31,5 +31,5 @@ TEST_F(CPUTest, AND_INT_TO_INT)
     cpu.set8byteRegister(CPU::R8::B, 172);
     cpu.set8byteRegister(CPU::R8::A, 84);
     cpu.andOperator(CPU::ArithmeticR8::B);
-EXPECT_EQ(cpu.get8byteRegister(CPU::R8::A), 4);AZ
+    EXPECT_EQ(cpu.get8byteRegister(CPU::R8::A), 4);
 }
