@@ -44,6 +44,12 @@ namespace CPU
          */
         void sbc(ArithmeticR8 reg);
 
+        /**
+         * do a bitwise and on the value in a specific register and the value in the A register
+         * @param reg the register
+         */
+        void andOperator(ArithmeticR8 reg);
+
     private:
         /* REPRESENTATION ORDER IN MEMORY : [ A | F | B | C | D | E | H | L ] */
         uint8_t registers[NB_REGISTER] = {};

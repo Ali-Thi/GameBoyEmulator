@@ -9,6 +9,14 @@ namespace CPU
     static R8 arithmeticR8ToR8(ArithmeticR8 reg);
     static R16 arithmeticR16ToR16(ArithmeticR16 reg);
 
+    void CPU::andOperator(ArithmeticR8 reg)
+    {
+        auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
+        auto valueAReg = get8byteRegister(R8::A);
+
+        set8byteRegister(R8::A, valueReg & valueAReg);
+    }
+
     void CPU::sub(ArithmeticR8 reg)
     {
         auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
@@ -32,28 +40,13 @@ namespace CPU
 
     void CPU::sbc(ArithmeticR8 reg)
     {
-        auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
-        auto valueAReg = get8byteRegister(R8::A);
-        uint8_t valueFReg = 0;
-        uint8_t result;
-        if (__builtin_sub_overflow(valueAReg, valueReg, &result))
-            valueFReg |= CARRY_FLAG_BYTE_MASK;
-
-        if (result == 0)
-            valueFReg |= ZERO_FLAG_BYTE_MASK;
-
-        if ((valueAReg & LOWER_NIBBLE) - (valueReg & LOWER_NIBBLE) > LOWER_NIBBLE)
-            valueFReg |= HALF_CARRY_FLAG_BYTE_MASK;
-
-        valueFReg |= SUBTRACT_FLAG_BYTE_MASK;
-
+        sub(reg);
+        auto result = get8byteRegister(R8::A);
+        auto valueFReg = get8byteRegister(R8::F);
         __builtin_sub_overflow(result, valueFReg, &result);
 
         set8byteRegister(R8::A, result);
-        set8byteRegister(R8::F, valueFReg);
     }
-
-
 
     void CPU::add(ArithmeticR8 reg)
     {
@@ -95,23 +88,12 @@ namespace CPU
 
     void CPU::adc(ArithmeticR8 reg)
     {
-        auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
-        auto valueAReg = get8byteRegister(R8::A);
-        uint8_t valueFReg = 0;
-        uint8_t result;
-        if (__builtin_add_overflow(valueAReg, valueReg, &result))
-            valueFReg |= CARRY_FLAG_BYTE_MASK;
-
-        if (result == 0)
-            valueFReg |= ZERO_FLAG_BYTE_MASK;
-
-        if ((valueAReg & LOWER_NIBBLE) + (valueReg & LOWER_NIBBLE) > LOWER_NIBBLE)
-            valueFReg |= HALF_CARRY_FLAG_BYTE_MASK;
-
+        add(reg);
+        auto result = get8byteRegister(R8::A);
+        auto valueFReg = get8byteRegister(R8::F);
         __builtin_add_overflow(result, valueFReg, &result);
 
         set8byteRegister(R8::A, result);
-        set8byteRegister(R8::F, valueFReg);
     }
 
     uint8_t CPU::get8byteRegister(R8 reg) const
