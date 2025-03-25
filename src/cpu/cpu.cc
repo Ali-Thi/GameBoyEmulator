@@ -9,6 +9,27 @@ namespace CPU
     static R8 arithmeticR8ToR8(ArithmeticR8 reg);
     static R16 arithmeticR16ToR16(ArithmeticR16 reg);
 
+    void CPU::cp(ArithmeticR8 reg)
+    {
+        auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
+        auto valueAReg = get8byteRegister(R8::A);
+        uint8_t valueFReg = 0;
+        uint8_t result;
+        if (__builtin_sub_overflow(valueAReg, valueReg, &result))
+            valueFReg |= CARRY_FLAG_BYTE_MASK;
+
+        if (result == 0)
+            valueFReg |= ZERO_FLAG_BYTE_MASK;
+
+        if ((valueAReg & LOWER_NIBBLE) - (valueReg & LOWER_NIBBLE) > LOWER_NIBBLE)
+            valueFReg |= HALF_CARRY_FLAG_BYTE_MASK;
+
+        valueFReg |= SUBTRACT_FLAG_BYTE_MASK;
+
+        set8byteRegister(R8::F, valueFReg);
+    }
+
+
     void CPU::andOperator(ArithmeticR8 reg)
     {
         auto valueReg = get8byteRegister(arithmeticR8ToR8(reg));
