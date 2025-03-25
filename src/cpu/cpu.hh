@@ -38,6 +38,12 @@ namespace CPU
          */
         void sub(ArithmeticR8 reg);
 
+        /**
+         * subtract a register to the A register and also subtract the carry flag to the result
+         * @param reg the register
+         */
+        void sbc(ArithmeticR8 reg);
+
     private:
         /* REPRESENTATION ORDER IN MEMORY : [ A | F | B | C | D | E | H | L ] */
         uint8_t registers[NB_REGISTER] = {};
